@@ -221,7 +221,7 @@ void calc_nine_patch_offsets(NINE_PATCH_SIDE *ps, int len)
 	}
 }
 
-void draw_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, int dx, int dy, int dw, int dh)
+void draw_tinted_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, ALLEGRO_COLOR tint, int dx, int dy, int dw, int dh)
 {
 	int i, j;
 	bool release_drawing = false;
@@ -232,7 +232,7 @@ void draw_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, int dx, int dy, int dw, int d
 	/* if the bitmap is the same size as the origin, then draw it as-is */		
 	if (dw == p9->width && dh == p9->height)
 	{
-		al_draw_bitmap_region(p9->bmp, 1, 1, dw, dh, dx, dy, 0);
+		al_draw_tinted_bitmap_region(p9->bmp, tint, 1, 1, dw, dh, dx, dy, 0);
 		return;
 	}
 		
@@ -260,7 +260,7 @@ void draw_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, int dx, int dy, int dw, int d
 	{
 		for (j = 0; j < p9->h.count; ++j)
 		{
-			al_draw_scaled_bitmap(p9->bmp,
+			al_draw_tinted_scaled_bitmap(p9->bmp, tint,
 				p9->h.m[j].offset, p9->v.m[i].offset,
 				p9->h.m[j].length, p9->v.m[i].length,
 				dx + p9->h.m[j].dest_offset, dy + p9->v.m[i].dest_offset,
@@ -274,6 +274,11 @@ void draw_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, int dx, int dy, int dw, int d
 	
 	if (release_drawing) 
 		al_hold_bitmap_drawing(false);
+}
+
+void draw_nine_patch_bitmap(NINE_PATCH_BITMAP *p9, int dx, int dy, int dw, int dh)
+{
+	draw_tinted_nine_patch_bitmap(p9, al_map_rgb_f(1, 1, 1), dx, dy, dw, dh);
 }
 
 ALLEGRO_BITMAP *create_bitmap_from_nine_patch(NINE_PATCH_BITMAP *p9, int w, int h)
