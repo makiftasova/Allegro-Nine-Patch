@@ -336,6 +336,7 @@ NINE_PATCH_PADDING get_nine_patch_padding(const NINE_PATCH_BITMAP *p9)
 
 void destroy_nine_patch_bitmap(NINE_PATCH_BITMAP *p9)
 {
+	if (p9 == 0) return;
 	if (p9->destroy_bmp) al_destroy_bitmap(p9->bmp);
 	al_destroy_mutex(p9->mutex);
 	al_free(p9->h.m);
